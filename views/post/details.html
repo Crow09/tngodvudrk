@@ -113,44 +113,43 @@
     });
   }
   
-  
 
-  $commentDetail.addEventListener('keydown', (e) => {
-    console.log(e.code);
-    if (e.code === "Enter") {
-      e.preventDefault();
-      submit.click();
-    }
-    else if (e.code === 'Escape') {
-      $commentDetail.value = "";
-    }
-  })
   if (commentForm.length) {
     console.log("얘가 문제");
     for (let i = 0; i < commentForm.length; i++) {
         if (commentForm[i].length > 3) {
-        let e = commentForm[i][3];
-        console.log(e);
-        e.addEventListener('click', (ev) => {
-          if (e.innerHTML === '완료') {
-            let cf = commentForm[i];
-            let ci = cf[0].value;
-            commentForm.action = `/post/${ci}/commentEditProcess`;
-            commentForm.method = 'post';
-            cf.submit();
-          }
-          else {
-            let cf = commentForm[i];
-            cf.addEventListener('submit', (event) => {
-              event.preventDefault();
-            })
-            console.log("로그인 돼있음");
-            cf[2].disabled = false;
-            ev.preventDefault();
-            e.innerHTML = "완료";
-          }
-        })
-      }
+          commentForm[i][2].addEventListener('keydown', (e) => {
+            console.log(e.code);
+            if (e.code === "Enter") {
+              e.preventDefault();
+              submit.click();
+            }
+            else if (e.code === 'Escape') {
+              $commentDetail.value = "";
+            }
+          })
+          let e = commentForm[i][3];
+          console.log(e);
+          e.addEventListener('click', (ev) => {
+            if (e.innerHTML === '완료') {
+              let cf = commentForm[i];
+              let ci = cf[0].value;
+              commentForm.action = `/post/${ci}/commentEditProcess`;
+              commentForm.method = 'post';
+              cf.submit();
+            }
+            else {
+              let cf = commentForm[i];
+              cf.addEventListener('submit', (event) => {
+                event.preventDefault();
+              })
+              console.log("로그인 돼있음");
+              cf[2].disabled = false;
+              ev.preventDefault();
+              e.innerHTML = "완료";
+            }
+          })
+        }
     }
   }
 
@@ -162,9 +161,11 @@
         cf.addEventListener('submit', (event) => {
           event.preventDefault();
         })
-        for (let j = 0; j < commentForm[i].length; j++) {
-          commentForm[i][2].disabled = true;
-          commentForm[i][3].innerHTML = "수정";
+        if (cf.length > 3) {
+          for (let j = 0; j < cf.length; j++) {
+            cf[2].disabled = true;
+            cf[3].innerHTML = "수정";
+          }
         }
       }
     console.log(event.code);

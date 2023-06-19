@@ -106,8 +106,10 @@ const postEdit = (req, res) => {
 			if (err) throw err;
 			if (rows[0] === undefined)
 				res.redirect('/errors/notFound');
-			else if (rows[0].id !== req.session.user.id)
+			else if (rows[0].id !== req.session.user.id) {
 				res.redirect(`/post/${req.params.postId}`);
+				console.log(req.params.postId);
+			}
 			else {
 				res.render(`post/posting.html`, {user : req.session.user, edit : true, post : rows[0]});
 			}
@@ -118,6 +120,7 @@ const postEdit = (req, res) => {
 }
 
 const postEditProcess = (req, res) => {
+	console.log(req.params.postId);
 	if (req.session.user !== undefined) {
 		let sql = `SELECT id FROM posts WHERE idPost=${req.params.postId}`;
 		pool.query(sql, (err, rows, field) => {
@@ -128,9 +131,9 @@ const postEditProcess = (req, res) => {
 			else {
 				sql = `UPDATE posts SET title='${req.body.title}', detail='${req.body.detail}', postingDate='${getDateTime(new Date())}' WHERE idPost=?`;
 				let value = `${req.params.postId}`;
-				pool.query(sql, value, (err, rows, fields) => {
+				pool.query(sql, value, (err) => {
 					if (err) throw err;
-					res.rediret(`/post/${req.params.postId}`)
+					res.redirect(`/post/${req.params.postId}`)
 				})
 			}
 		})

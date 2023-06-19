@@ -4,14 +4,14 @@ const list = (req, res)=>{
     let sql = `SELECT * FROM users`
     pool.query(sql, (err, rows, fields)=>{
         if(err) throw err;
-        res.render('user/list.html', {list:rows, user:req.session.user, href : "post"});
+        res.render('user/list.html', {list:rows, user:req.session.user, href : "user"});
     })
 }
 
 const myPage = (req, res)=>{
     console.log(req.session.user);
     if(req.session.user !== undefined)
-        res.render('user/myPage.html', {user:req.session.user, href : 'post'});
+        res.render('user/myPage.html', {user : req.session.user, href : 'user'});
     else
     res.render('message.html', {msg:'로그인하세요.', user : req.session.user})
 }
