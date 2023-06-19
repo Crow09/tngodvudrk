@@ -1,0 +1,177 @@
+{% extends "index.html" %}
+
+{% block mid %}
+
+<head>
+  <style>
+    a:hover {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<div class="relative overflow-x-auto shadow-md">
+  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+      <tr>
+        <th scope="col" class="px-7 py-3">
+          글 번호 : 
+          <input name="postId" id="postId" type="text" value="{{ post.idPost }}" class="w-12" readonly>
+        </th>
+        <th scope="col" class="px-7 py-3">
+          제목 : {{ post.title }}
+        </th>
+        <th scope="col" class="px-7 py-3">
+          작성자 : {{ post.nick }}({{ post.id }})
+        </th>
+        <th scope="col" class="px-7 py-3">
+          작성일 : {{ post.postingDate }}
+        </th>
+        {% if user.id == post.id %}
+        <th>
+          <a href="/post/{{ post.idPost }}/postEdit" class="flex w-full justify-center rounded-md bg-purple-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">수정</a>
+        </th>
+        <th>
+          <a href="/post/{{ post.idPost }}/postDelete" class="flex w-full justify-center rounded-md bg-purple-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">삭제</a>
+        </th>
+        {% endif %}
+      </tr>
+    </thead>
+  </table>
+</div>
+  <center>
+    <div class="bg-white dark:text-white dark:bg-gray-700">{{ post.detail }}</div>
+  </center>
+  <div class="relative overflow-x-auto shadow-md">
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="px-7 py-3">
+            작성자
+          </th>
+          <th scope="col" class="px-7 py-3">
+            내용
+          </th>
+          <th scope="col" class="px-7 py-3">
+            게시일
+          </th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for comment in comments %}
+          <form class="commentForm" action="/post/{{ comment.idComment }}/commentEditProcess" method="post">
+            <input name="commentId" type="text" value="{{ comment.idComment }}" hidden>
+            <input name="postId" type="text" value="{{ post.idPost }}" class="w-12" hidden>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <td class="px-6 py-4">
+                {{ comment.nick }}({{ comment.id }})
+              </td>
+              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <input name="commentInput" onkeydown="typing(event)" type="text" value="{{ comment.comment }}" disabled>
+              </th>
+              <td class="px-6 py-4">
+                {{ comment.commentDate }}
+              </td>
+              {% if user.id === comment.id %}
+              <td>
+                <button type="submit" class="flex w-14 ml-2 justify-center rounded-md bg-purple-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">수정</button>
+              </td>
+              <td>
+                <a href="/post/{{ comment.idComment }}/commentDelete" class="flex w-20 justify-center rounded-md bg-purple-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ml-2">삭제</a>
+              </td>
+              {% endif %}
+            </tr>
+          </form>
+        {% endfor %}
+      </tbody>
+    </table>
+    <form id="commentingForm" action="/post/commentProcess" method="post">
+      <input name="postId" type="text" value="{{ post.idPost }}" hidden>
+      <div class="flex mt-2 mb-2">
+        <input id="commentDetail" name="commentDetail" minlength="1" maxlength="500" placeholder="댓글 작성" type="text" id="small-input" class="block w-full p-2 text-black border border-gray-300bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 rounded">
+        <a id="erase" class="flex ml-2 justify-center rounded-md bg-purple-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">X</a>
+        <button id="submit" type="submit" class="flex w-20 justify-center rounded-md bg-purple-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ml-2">완료</button>
+      </div>
+    </form>
+  </div>
+
+<script>
+  const commentForm = document.querySelectorAll('.commentForm');
+  const commentingForm = document.querySelector('#commentingForm');
+  const $commentDetail = document.querySelector("#commentDetail");
+  const erase = document.querySelector("#erase");
+  const submit = document.querySelector("#submit");
+
+  console.log(commentForm.length);
+
+  for (let i = 0; i < commentForm.length; i++) {
+    let cf = commentForm[i];
+    cf.addEventListener('submit', (event) => {
+      event.preventDefault();
+    });
+  }
+  
+  
+
+  $commentDetail.addEventListener('keydown', (e) => {
+    console.log(e.code);
+    if (e.code === "Enter") {
+      e.preventDefault();
+      submit.click();
+    }
+    else if (e.code === 'Escape') {
+      $commentDetail.value = "";
+    }
+  })
+  if (commentForm.length) {
+    console.log("얘가 문제");
+    for (let i = 0; i < commentForm.length; i++) {
+        if (commentForm[i].length > 3) {
+        let e = commentForm[i][3];
+        console.log(e);
+        e.addEventListener('click', (ev) => {
+          if (e.innerHTML === '완료') {
+            let cf = commentForm[i];
+            let ci = cf[0].value;
+            commentForm.action = `/post/${ci}/commentEditProcess`;
+            commentForm.method = 'post';
+            cf.submit();
+          }
+          else {
+            let cf = commentForm[i];
+            cf.addEventListener('submit', (event) => {
+              event.preventDefault();
+            })
+            console.log("로그인 돼있음");
+            cf[2].disabled = false;
+            ev.preventDefault();
+            e.innerHTML = "완료";
+          }
+        })
+      }
+    }
+  }
+
+
+  const typing = (event) => {
+    if (event.code === 'Escape')
+      for (let i = 0; i < commentForm.length; i++) {
+        let cf = commentForm[i];
+        cf.addEventListener('submit', (event) => {
+          event.preventDefault();
+        })
+        for (let j = 0; j < commentForm[i].length; j++) {
+          commentForm[i][2].disabled = true;
+          commentForm[i][3].innerHTML = "수정";
+        }
+      }
+    console.log(event.code);
+  }
+  erase.addEventListener('click', (e) => {
+    commentDetail.value = "";
+  })
+</script>
+
+{% endblock %}

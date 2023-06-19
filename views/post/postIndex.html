@@ -1,0 +1,46 @@
+{% extends "index.html" %}
+
+{% block mid %}
+  {% if posts %}
+  <div class="relative overflow-x-auto shadow-md">
+    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-7 py-3">
+              글 번호
+            </th>
+            <th scope="col" class="px-7 py-3">
+              작성자
+            </th>
+            <th scope="col" class="px-7 py-3">
+              제목
+            </th>
+            <th scope="col" class="px-7 py-3">
+              게시일
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for post in posts %}
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <td class="px-6 py-4">
+                {{post.idPost}}
+              </td>
+              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                {{ post.nick }}
+              </th>
+              <td class="px-6 py-4">
+                <a href="/post/{{post.idPost}}">{{ post.title }}</a>
+              </td>
+            <td class="px-6 py-4">
+              {{ post.postingDate }}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    게시글이 존재하지 않습니다.
+  {% endif %}
+{% endblock %}

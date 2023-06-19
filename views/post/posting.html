@@ -1,0 +1,41 @@
+{% extends "index.html" %}
+
+{% block mid %}
+
+
+<form id="postingForm" action="/post/{{ post.idPost }}/postEditProcess" method="post">
+	<div class="mb-6">
+		<label for="base-input" class="block mb-2 text-sm font-medium text-gray-900">ID</label>
+		<input disabled value="{{ user.id }}" name="id" type="text" id="base-input" class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+	</div>
+	<div class="mb-6">
+		<label for="base-input" class="block mb-2 text-sm font-medium text-gray-900">닉네임</label>
+		<input disabled value="{{ user.nick }}" name="nick" type="text" id="base-input" class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+	</div>
+	<div class="mb-6">
+		<label for="base-input" class="block mb-2 text-sm font-medium text-gray-900">제목</label>
+		<input value="{{ post.title }}" name="title" type="text" id="base-input" class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+	</div>
+	<div class="mb-6">
+		<label for="large-input" class="block mb-2 text-sm font-medium text-gray-900">본문</label>
+		<input value="{{ post.detail }}" name="detail" type="text" id="large-input" class="block w-full p-4 text-black border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500">
+	</div>
+	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm py-4">
+		{% if edit %}
+			<button class="flex w-full justify-center rounded-md bg-purple-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">edit</button>
+		{% else %}
+			<button class="flex w-full justify-center rounded-md bg-purple-700 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-purple-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onclick="posting()">posting</button>
+		{% endif %}
+	</div>
+</form>
+	
+	<script>
+		const postingForm = document.querySelector('#postingForm');
+		
+		const posting = () => {
+			postingForm.action = "/post/postingProcess";
+		}
+	</script>
+	
+	
+	{% endblock %}
